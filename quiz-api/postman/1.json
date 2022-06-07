@@ -1,0 +1,2331 @@
+{
+	"info": {
+		"_postman_id": "5f9be47c-734a-4572-9de8-41db0c6401cb",
+		"name": "1 - Repository tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login & Basic",
+			"item": [
+				{
+					"name": "Get quiz info - Ensure empty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"info = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Check infos\", function () {\r",
+									"    pm.expect(info.size).to.equal(0);\r",
+									"    pm.expect(info.scores.length).to.equal(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/quiz-info",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"quiz-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login wrong password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Wrong Password \", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"wrong\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/login",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add question - unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond unothorised action\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la couleur du cheval blanc d'Henry IV ?\",\r\n    \"title\": \"Dummy Question\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 2,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Noir\",\r\n            \"isCorrect\": false \r\n        },\r\n        {\r\n            \"text\": \"Gris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Blanc\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"text\": \"La réponse D\",\r\n            \"isCorrect\": false\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete question - unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond unothorised action\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login good password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Good Password \", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"access token is provided\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"token\")\r",
+									"});\r",
+									"\r",
+									"//A activer une fois l'authentification implémentée\r",
+									"pm.environment.set(\"access_token\",pm.response.json().token);\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"Vive l'ESIEE !\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/login",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add question - with authent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la couleur du cheval blanc d'Henry IV ?\",\r\n    \"title\": \"Dummy Question\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 1,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Noir\",\r\n            \"isCorrect\": false \r\n        },\r\n        {\r\n            \"text\": \"Gris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Blanc\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"text\": \"La réponse D\",\r\n            \"isCorrect\": false\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return henry IV question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Dummy Question\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
+									"    pm.expect(Question.position).to.equal(1);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Noir\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Gris\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all questions (draft)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// pm.test(\"Request respond ok\", function () {\r",
+									"//     pm.response.to.have.status(200);\r",
+									"// });\r",
+									"\r",
+									"// pm.test(\"Request respond json\", function () {\r",
+									"//     pm.response.to.not.be.error;\r",
+									"//     pm.response.to.have.jsonBody();\r",
+									"//     pm.response.to.not.have.jsonBody(\"error\");\r",
+									"// });\r",
+									"\r",
+									"// Question = pm.response.json()\r",
+									"\r",
+									"// pm.test(\"Return henry IV question\", function () {\r",
+									"//     pm.expect(Question.title).to.equal(\"Dummy Question\");\r",
+									"//     pm.expect(Question.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
+									"//     pm.expect(Question.position).to.equal(1);\r",
+									"//     pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"// });\r",
+									"\r",
+									"// pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"//     pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"//     pm.expect(Question.possibleAnswers[0].text).to.equal(\"Noir\");\r",
+									"//     pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"//     pm.expect(Question.possibleAnswers[1].text).to.equal(\"Gris\");\r",
+									"//     pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"//     pm.expect(Question.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
+									"//     pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"//     pm.expect(Question.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
+									"//     pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"// });\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la couleur du cheval noir d'Henry IV ?\",\r\n    \"title\": \"Very Dummy Question\",\r\n    \"image\": \"veryFalseb64imagecontent\",\r\n    \"position\": 1,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Gris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Blanc\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"La réponse D\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get updated question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return henry IV question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Very Dummy Question\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la couleur du cheval noir d'Henry IV ?\");\r",
+									"    pm.expect(Question.position).to.equal(1);\r",
+									"    pm.expect(Question.image).to.equal(\"veryFalseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(3);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Gris\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Blanc\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"La réponse D\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get non existing question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/10000",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"10000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update non existing question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la couleur du cheval noir d'Henry IV ?\",\r\n    \"title\": \"Very Dummy Question\",\r\n    \"image\": \"veryFalseb64imagecontent\",\r\n    \"position\": 1,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Gris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Blanc\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"La réponse D\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1000",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete non existing question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1000",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Questions reordering",
+			"item": [
+				{
+					"name": "Add question 1 - Henri IV",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la couleur du cheval blanc d'Henry IV ?\",\r\n    \"title\": \"Histoire !\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 1,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Noir\",\r\n            \"isCorrect\": false \r\n        },\r\n        {\r\n            \"text\": \"Gris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Blanc\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"text\": \"La réponse D\",\r\n            \"isCorrect\": false\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add question 2 - Russia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la capitale de la Russie ?\",\r\n    \"title\": \"Géographie !\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 2,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Riga\",\r\n            \"isCorrect\": false \r\n        },\r\n        {\r\n            \"text\": \"Kiev\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Paris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Moscou\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add question 3 - Marie Curie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Qui était Marie Curie ?\",\r\n    \"title\": \"Personnes célèbres !\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 3,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Une physicienne\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"text\": \"Une chanteuse\",\r\n            \"isCorrect\": false \r\n        },\r\n        {\r\n            \"text\": \"Une écrivaine\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Une danseuse de cabaret\",\r\n            \"isCorrect\": false\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add question at position 2 - Einstein",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est l'équation célèbre d'Einstein ?\",\r\n    \"title\": \"Science !\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 2,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"a² + b² = c²\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"E=mc²\",\r\n            \"isCorrect\": true \r\n        },\r\n        {\r\n            \"text\": \"log xy = log x + log y\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"i²=-1\",\r\n            \"isCorrect\": false\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 1 - Henri IV",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return henry IV question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Histoire !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
+									"    pm.expect(Question.position).to.equal(1);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Noir\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Gris\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 2 - Einstein",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Einstein question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Science !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est l'équation célèbre d'Einstein ?\");\r",
+									"    pm.expect(Question.position).to.equal(2);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"a² + b² = c²\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"E=mc²\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"log xy = log x + log y\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"i²=-1\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/2",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 3 - Russia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Russia question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Géographie !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la capitale de la Russie ?\");\r",
+									"    pm.expect(Question.position).to.equal(3);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Riga\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Kiev\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Paris\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Moscou\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/3",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 4 - Marie Curie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Marie Curie question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Personnes célèbres !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Qui était Marie Curie ?\");\r",
+									"    pm.expect(Question.position).to.equal(4);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Une physicienne\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Une chanteuse\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Une écrivaine\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Une danseuse de cabaret\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/4",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update question 3 to position 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la capitale de la Russie ?\",\r\n    \"title\": \"Géographie !\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 1,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Riga\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Kiev\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Paris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Moscou\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/3",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 1 - Russia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Russia question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Géographie !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la capitale de la Russie ?\");\r",
+									"    pm.expect(Question.position).to.equal(1);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Riga\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Kiev\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Paris\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Moscou\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 2 - Henri IV",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return henry IV question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Histoire !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
+									"    pm.expect(Question.position).to.equal(2);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Noir\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Gris\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/2",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 3 - Einstein",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Einstein question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Science !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est l'équation célèbre d'Einstein ?\");\r",
+									"    pm.expect(Question.position).to.equal(3);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"a² + b² = c²\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"E=mc²\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"log xy = log x + log y\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"i²=-1\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/3",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 4 - Marie Curie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Marie Curie question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Personnes célèbres !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Qui était Marie Curie ?\");\r",
+									"    pm.expect(Question.position).to.equal(4);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Une physicienne\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Une chanteuse\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Une écrivaine\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Une danseuse de cabaret\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/4",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update question 2 to position 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la couleur du cheval blanc d'Henry IV ?\",\r\n    \"title\": \"Histoire !\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 4,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Noir\",\r\n            \"isCorrect\": false \r\n        },\r\n        {\r\n            \"text\": \"Gris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Blanc\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"text\": \"La réponse D\",\r\n            \"isCorrect\": false\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/2",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 1 - Russia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Russia question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Géographie !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la capitale de la Russie ?\");\r",
+									"    pm.expect(Question.position).to.equal(1);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Riga\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Kiev\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Paris\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Moscou\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 2 - Einstein",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Einstein question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Science !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est l'équation célèbre d'Einstein ?\");\r",
+									"    pm.expect(Question.position).to.equal(2);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"a² + b² = c²\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"E=mc²\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"log xy = log x + log y\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"i²=-1\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/2",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 3 - Marie Curie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Marie Curie question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Personnes célèbres !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Qui était Marie Curie ?\");\r",
+									"    pm.expect(Question.position).to.equal(3);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Une physicienne\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Une chanteuse\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Une écrivaine\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Une danseuse de cabaret\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/3",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 4 - Henri IV",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return henry IV question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Histoire !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
+									"    pm.expect(Question.position).to.equal(4);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Noir\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Gris\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/4",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete question 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/2",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 1 - Russia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Russia question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Géographie !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la capitale de la Russie ?\");\r",
+									"    pm.expect(Question.position).to.equal(1);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Riga\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Kiev\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Paris\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Moscou\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 2 - Marie Curie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return Marie Curie question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Personnes célèbres !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Qui était Marie Curie ?\");\r",
+									"    pm.expect(Question.position).to.equal(2);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Une physicienne\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Une chanteuse\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Une écrivaine\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"Une danseuse de cabaret\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/2",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question 3 - Henri IV",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"Question = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Return henry IV question\", function () {\r",
+									"    pm.expect(Question.title).to.equal(\"Histoire !\");\r",
+									"    pm.expect(Question.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
+									"    pm.expect(Question.position).to.equal(3);\r",
+									"    pm.expect(Question.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(Question.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(Question.possibleAnswers[0].text).to.equal(\"Noir\");\r",
+									"    pm.expect(Question.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[1].text).to.equal(\"Gris\");\r",
+									"    pm.expect(Question.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(Question.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
+									"    pm.expect(Question.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"    pm.expect(Question.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
+									"    pm.expect(Question.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/3",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get no longer existing question 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/4",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete question 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/3",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete question 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/2",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete question 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/questions/1",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get quiz info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"info = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Check infos\", function () {\r",
+									"    pm.expect(info.size).to.equal(0);\r",
+									"    pm.expect(info.scores.length).to.equal(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/quiz-info",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"quiz-info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Participation",
+			"item": [
+				{
+					"name": "Create a participation (no asserts yet)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"playerName\": \"Simon\",\r\n    \"answers\": [3]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/participations",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"participations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all participations (no asserts yet)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/participations",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"participations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get quiz-info with scores (no asserts yet)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"no questions is registered\", function () {\r",
+									"    // pm.expect(pm.response.json().size).to.equal(0);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainDNS}}:{{Port}}/quiz-info",
+							"host": [
+								"{{MainDNS}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"quiz-info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
