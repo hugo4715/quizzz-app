@@ -68,11 +68,11 @@ export default {
     controls.enableDamping = true;
 
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath( '/draco/' );
+    dracoLoader.setDecoderPath('draco/');
 
     const loader = new GLTFLoader();
     loader.setDRACOLoader( dracoLoader );
-    loader.load( '/LittlestTokyo.glb', function ( gltf ) {
+    loader.load('LittlestTokyo.glb', function ( gltf ) {
       const model = gltf.scene;
       model.position.set( 1, 1, 0 );
       model.scale.set( 0.01, 0.01, 0.01 );

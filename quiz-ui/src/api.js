@@ -1,5 +1,5 @@
 import storage from '@/storage';
-const host = 'http://localhost:5000/';
+const host = process.env.VUE_APP_QUIZ_API_URL;
 
 export default {
     getQuizInfo() {

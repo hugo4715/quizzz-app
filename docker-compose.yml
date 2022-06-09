@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  g19-quiz-api:
+    build: quiz-api
+    env_file: .env
+    ports:
+      - 5000:5000
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_URL_PREFIX=$G19_QUIZ_APP_PUBLIC_API_PREFIX
+  g19-quiz-ui:
+    build: quiz-ui
+    env_file: .env
+    depends_on:
+      - "g19-quiz-api"
+    ports:
+      - 8080:8080
+    environment:
+      - QUIZ_API_URL=$G19_QUIZ_APP_PUBLIC_API_URL
+      - QUIZ_UI_URL=$G19_QUIZ_APP_PUBLIC_UI_URL

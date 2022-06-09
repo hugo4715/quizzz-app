@@ -1,3 +1,4 @@
+import os
 import bcrypt
 import sqlite3
 import jwt_utils
@@ -5,7 +6,11 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, send_wildcard=True)
+
+url_prefix = os.getenv("FLASK_URL_PREFIX")
+if url_prefix[-1] == "/":
+    url_prefix = url_prefix[:-1]
 
 admin_pw_hash = b'$2b$12$JKgC5/lPJrIFqpvRxmzxGe1jS8imVM9NaW.iOn/RDVYEEVtuYCvuK'
 db_file = "db.sqlite"
@@ -199,7 +204,7 @@ def truncate_participations():
 # ---------- PUBLIC PART ----------  #
 
 
-@app.route('/quiz-info', methods=['GET'])
+@app.route(url_prefix + '/quiz-info', methods=['GET'])
 def quiz_info():
     db_connection = sqlite3.connect("db.sqlite", isolation_level=None)
     db_cursor = sqlite3.Cursor(db_connection)
@@ -210,12 +215,12 @@ def quiz_info():
                                                      for s in db_cursor.fetchall()]}, 200
 
 
-@app.route('/questions/<qid>', methods=['GET'])
+@app.route(url_prefix + '/questions/<qid>', methods=['GET'])
 def get_question(qid):
     return get_question_local(qid)
 
 
-@app.route('/questions', methods=['GET'])
+@app.route(url_prefix + '/questions', methods=['GET'])
 def get_all_questions():
     # Get a list of all questions from the DB
     db_connection = sqlite3.connect("db.sqlite", isolation_level=None)
@@ -233,7 +238,7 @@ def get_all_questions():
     return jsonify(question_list), 200
 
 
-@app.route('/login', methods=['POST'])
+@app.route(url_prefix + '/login', methods=['POST'])
 def login():
     payload = request.get_json()
     try:
@@ -248,13 +253,13 @@ def login():
         return "No password specified", 400
     return "Invalid password", 401
 
-@app.route('/participations', methods=['DELETE'])
+@app.route(url_prefix + '/participations', methods=['DELETE'])
 def delete_participations():
     truncate_participations()
     return 'Ok', 204
 
 
-@app.route('/participations', methods=['POST'])
+@app.route(url_prefix + '/participations', methods=['POST'])
 def participations():
     payload = request.get_json()
     try:
@@ -288,7 +293,7 @@ def participations():
 # ---------- ADMINISTRATION PART ----------  #
 
 
-@app.route('/questions', methods=['POST'])
+@app.route(url_prefix + '/questions', methods=['POST'])
 def create_question():
     try:
         auth_error = check_auth_error(request)
@@ -304,7 +309,7 @@ def create_question():
         return "Bad request: {} not given".format(e), 400
 
 
-@app.route('/questions/<qid>', methods=["PUT"])
+@app.route(url_prefix + '/questions/<qid>', methods=["PUT"])
 def update_question(qid):
     auth_error = check_auth_error(request)
     if auth_error is not None:
@@ -313,7 +318,7 @@ def update_question(qid):
     return update_question_local(qid, request.get_json())
 
 
-@app.route('/questions/<qid>', methods=['DELETE'])
+@app.route(url_prefix + '/questions/<qid>', methods=['DELETE'])
 def delete_question(qid):
     auth_error = check_auth_error(request)
     if auth_error is not None:
@@ -323,4 +328,4 @@ def delete_question(qid):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
